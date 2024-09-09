@@ -7,10 +7,10 @@
 
 #include <stdint.h>
 
-struct __128bits{
-    char data[16];
+struct hash128{
+    uint32_t data[4];
 };
 
-struct __128bits *md5_digest(void* buffer, uint64_t buff_len);
+struct hash128 md5_digest(void* buffer, uint64_t buff_len);
 
 #endif //MD5_H

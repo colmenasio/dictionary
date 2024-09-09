@@ -7,15 +7,16 @@
 #include "md5_test.h"
 
 
-static const char TEST_STR[] = "Hello Worldasdasfsefefefaefkaknfvlkmasmflakdaskdnlas";
+static const char TEST_STR[] = "Hola";
 
 int get_str_len(char* str);
 int test_byte_getter();
 int test_word_getter();
+int test_md5_algo();
 
 int main() {
     test_byte_getter();
-    test_word_getter();
+    test_md5_algo();
 }
 
 int get_str_len(char* str) {
@@ -39,5 +40,11 @@ int test_word_getter() {
     printf("MESSAGE LENGTH IN BYTES: %d\n", len);
     printf("TOTAL N OF WORDS IN BYTES: %d\n", total_n_of_words);
     for (int i = 0; i < total_n_of_words; i++) {printf("%08x\n", get_word(TEST_STR, len, i));}
+    return 0;
+}
+
+int test_md5_algo() {
+    int len = get_str_len(TEST_STR);
+    struct hash128 result = md5_digest(TEST_STR, len);
     return 0;
 }
