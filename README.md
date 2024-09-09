@@ -2,6 +2,9 @@
 
 A naive implementation of python's dictionaries using a custom implementation of the md5 hash
 
-Mostly for C practice 
+Keys and Values can only be strings and void pointers respectively 
+cause im **NOT** implementing a dynamic typing system `lmao`
 
-`lmao`
+Aditionally, for safety reasons, keys are only garanteed uniqueness for the first 64 characters
+
+Mostly done for C practice 
