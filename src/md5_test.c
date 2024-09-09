@@ -46,5 +46,6 @@ int test_word_getter() {
 int test_md5_algo() {
     int len = get_str_len(TEST_STR);
     struct hash128 result = md5_digest(TEST_STR, len);
-    return 0;
+    printf("HASH: ");
+    for (int i = 0; i<16;i++){printf("%02x", ((unsigned char*)result.data)[i]);}
 }

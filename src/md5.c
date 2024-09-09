@@ -78,7 +78,8 @@ struct hash128 md5_digest(void* buffer, uint64_t total_buff_len) {
 uint8_t get_byte(uint8_t* buffer, uint64_t total_buff_len, uint64_t byte_index) {
     if (byte_index < total_buff_len) {return buffer[byte_index];}
     if (byte_index % 64 < 56 || (total_buff_len%56<8 && byte_index-total_buff_len<8)) {return 0x80 * (byte_index == total_buff_len);}
-    if (byte_index % 64 < 64) {return ((char*)&total_buff_len)[63 - (byte_index % 64)];}
+    uint64_t len_bits = 8*total_buff_len;
+    if (byte_index % 64 < 64) {return ((char*)&len_bits)[byte_index%64 - 56];}
     return 0;
 }
 
