@@ -16,6 +16,7 @@ struct BUCKET{
 
 struct BUCKET make_new_bucket(char key[], void* valuep);
 struct BUCKET* make_bucket_array(int size);
+int bucket_cmp(struct BUCKET* bucket1, struct BUCKET* bucket2);
 void print_bucket(struct BUCKET* bucket, char value_format[]);
 
 #endif //BUCKET_H
