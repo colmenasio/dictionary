@@ -47,5 +47,13 @@ int main() {
         print_bucket(get_bucket(&dict, "uno"), "%d");
         destroy_dict(&dict);
     }
+    { // TEST EQUALITY
+        int length = 3;
+        struct BUCKET *initial_buckets1[] = {&b1, &b2, &b3};
+        struct  DICTIONARY dict1 = make_new_populated_dict(initial_buckets1, length);
+        struct BUCKET *initial_buckets2[] = {&b2, &b3, &b1};
+        struct  DICTIONARY dict2 = make_new_populated_dict(initial_buckets2, length);
+        printf("\n\nTest equality\n%s\n", dict_cmp(&dict1, &dict2)? "SAME": "DIFFERENT");
+    }
     return 0;
 }
