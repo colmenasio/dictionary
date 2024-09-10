@@ -7,9 +7,6 @@ cause im **NOT** implementing a dynamic typing system `lmao`
 
 Aditionally, for safety reasons, keys are only garanteed uniqueness for the first 64 characters
 
-Reindexing is extremely unoptimized cause abusing insertions operations is a bad practice 
-(and because im too lazy to actually think of a better implementation)
-
 To top if off, as if this implementation couldnt be more janky, the dictionary does NOT manage the memory of its values, 
 meaning if a value it references to gets freed, the dictionary has not way to know it contains a dangling pointer
 
