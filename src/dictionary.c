@@ -1,9 +1,6 @@
 #include <stdlib.h>
-
-#include "dictionary.h"
-
 #include <string.h>
-
+#include "dictionary.h"
 #include "md5.h"
 
 int _auto_resize(struct DICTIONARY* dictionary);
@@ -58,13 +55,19 @@ int _auto_resize(struct DICTIONARY* dictionary) {
 // Reindexes the buckets. The capacity can be increased or decreased by specifying `new_capacity`
 // Returns 0 if the reindexing was sucessful. Returns -1 if the new_capacity is too low
 int _reindex(struct DICTIONARY* dictionary, int new_capacity) {
+    // Check validity of `new_capacity`
     if(new_capacity<dictionary->buckets_used || new_capacity<MIN_DICT_CAPACITY){return -1;}
-    // TODO IMPLEMENT REINDEXING
-    return -1;
+
+    // Prepare the buffers for reindexing
     struct BUCKET* old_buckets = dictionary->buckets;
     int old_capacity = dictionary->capacity;
-    dictionary->capacity = old_capacity<<1;
-    dictionary->buckets = _make_bucket_array(old_capacity<<1); // double the capacity
+    dictionary->capacity = new_capacity;
+    dictionary->buckets = _make_bucket_array(new_capacity);
+    for (int i = 0; i < old_capacity; i++) {
+        if (old_buckets[i].is_used) {insert_bucket(dictionary, old_buckets+i);}
+    }
+    free(old_buckets);
+    return 0;
 }
 
 // COpies the contents of 'src_bucket' into the appropate bucket in the dictionary
