@@ -79,8 +79,7 @@ struct hash128 md5_digest(void* buffer, uint64_t total_buff_len) {
 
 // Digests a string, including the `\0` character
 struct hash128 md5_digest_str(char* str) {
-    strlen(str);
-    return md5_digest()
+    return md5_digest(str, strlen(str));
 }
 
 uint8_t get_byte(uint8_t* buffer, uint64_t total_buff_len, uint64_t byte_index) {
