@@ -40,6 +40,7 @@ struct BUCKET make_new_bucket(char key[], void* valuep) {
     strncpy(new_bucket.key, key, KEY_SIGNIFICANT_CHAR);
     memcpy(new_bucket.key_hash, md5_digest_str(key).data, sizeof(new_bucket.key_hash));
     new_bucket.valuep = valuep;
+    return new_bucket;
 }
 
 // Checks if more than half of the dictionaries buckets are used and in case they are, tries a resizing
@@ -50,6 +51,7 @@ int _auto_resize(struct DICTIONARY* dictionary) {
 
     // Upscaling
     _reindex(dictionary, dictionary->capacity<<1);
+    return 1;
 }
 
 // Reindexes the buckets. The capacity can be increased or decreased by specifying `new_capacity`
@@ -102,8 +104,20 @@ void* get_value(struct DICTIONARY* dictionary, char key[]){
 }
 
 // Returns the slot of the bucket that corresponds to a key
+// Returns -1 if theres not even a single unused bucket in the dictionary, which should never happen???
 int _get_slot(struct DICTIONARY* dictionary, char key[]) {
-    // TODO IMPLEMENT SLOT GETTING
+    // Reads the bits from the keys's hash as 4 32-bit unsigned integers. The starting slot a key
+    // is the sum of said integers modulo the dict capacity. The slot the key gets assigned is the first empty one
+    // starting from its starting slot.
+    struct hash128 hash = md5_digest_str(key);
+    int slot, starting_slot = (hash.data[0]+hash.data[1]+hash.data[2]+hash.data[3])%dictionary->capacity;
+    for(int i = 0;i < dictionary->capacity; i++) {
+        slot = (starting_slot+i)%dictionary->capacity;
+        if(!dictionary->buckets[slot].is_used) {
+            return slot;
+        }
+    }
+    return -1;
 }
 
 int is_key(struct DICTIONARY* dictionary, char key[]){
