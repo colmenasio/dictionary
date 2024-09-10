@@ -129,3 +129,7 @@ void _operation(uint32_t * A, uint32_t * B,uint32_t * C, uint32_t * D, uint32_t 
     uint32_t binding = *A + aux_func(*B, *C, *D) + curr_block[k] + T[i];
     *A = *B + ((binding << s) | (binding >> (32-s)));
 }
+
+void print_hash128(struct hash128* hash) {
+    for (int i = 0; i<16;i++){printf("%02x", ((unsigned char*)hash->data)[i]);}
+}

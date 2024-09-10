@@ -14,4 +14,6 @@ struct hash128{
 struct hash128 md5_digest(void* buffer, uint64_t buff_len);
 struct hash128 md5_digest_str(char* str);
 
+void print_hash128(struct hash128* hash);
+
 #endif //MD5_H
