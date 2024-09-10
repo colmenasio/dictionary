@@ -19,7 +19,7 @@ struct DICTIONARY make_new_dict(){
     return new_dictionary;
 }
 
-// Generates array of buckets. Ownership of the memory is transfered to the caller
+// Generates array of unused buckets. Ownership of the memory is transfered to the caller
 struct BUCKET* _make_bucket_array(int size){
     struct BUCKET* buckets = malloc(size * sizeof(struct BUCKET));
     for (int i = 0; i < size; i++){buckets[i] = (struct BUCKET){.is_used = 0};}
@@ -34,6 +34,15 @@ struct DICTIONARY make_new_populated_dict(struct BUCKET buckets[], int len){
 
 void populate_dict(struct DICTIONARY *dictionaryp, struct BUCKET buckets[], int len){
     for (int i = 0; i < len; i++) {insert_bucket(dictionaryp, &buckets[i]);}
+}
+
+// Make an unused bucket initializing its key, hash and value
+struct BUCKET make_new_bucket(char key[], void* valuep) {
+    struct BUCKET new_bucket;
+    new_bucket.is_used = 0;
+    strncpy(new_bucket.key, key, KEY_SIGNIFICANT_CHAR);
+    memcpy(new_bucket.key_hash, md5_digest_str(key).data, sizeof(new_bucket.key_hash));
+    new_bucket.valuep = valuep;
 }
 
 // Checks if more than half of the dictionaries buckets are used and in case they are, tries a resizing
@@ -77,11 +86,7 @@ int insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *src_bucket){
 //Automatically create a bucket and insert it into the dictionary
 // Returns 0 if inserted returns -1 if anything failed
 int insert_value(struct DICTIONARY* dictionary, char key[], void* valuep){
-    struct BUCKET new_bucket;
-    new_bucket.is_used = 1;
-    strncpy(new_bucket.key, key, KEY_SIGNIFICANT_CHAR);
-    memcpy(new_bucket.key_hash, md5_digest_str(key).data, sizeof(new_bucket.key_hash));
-    new_bucket.valuep = valuep;
+    struct BUCKET new_bucket = make_new_bucket(key, valuep);
     return insert_bucket(dictionary, &new_bucket);
 }
 

@@ -28,8 +28,10 @@ struct DICTIONARY make_new_populated_dict(struct BUCKET buckets[], int len);
 void populate_dict(struct DICTIONARY *dictionaryp, struct BUCKET buckets[], int len);
 int insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *bucket);
 int insert_value(struct DICTIONARY* dictionary, char key[], void* valuep);
-struct BUCKET* get_bucket(struct DICTIONARY* dictionary, char key[])
+struct BUCKET* get_bucket(struct DICTIONARY* dictionary, char key[]);
 void* get_value(struct DICTIONARY* dictionary, char key[]);
 int is_key(struct DICTIONARY* dictionary, char key[]);
+
+struct BUCKET make_new_bucket(char key[], void* valuep);
 
 #endif //DICTIONARY_H
