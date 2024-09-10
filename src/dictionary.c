@@ -19,14 +19,14 @@ struct DICTIONARY make_new_dict(){
     return new_dictionary;
 }
 
-struct DICTIONARY make_new_populated_dict(struct BUCKET buckets[], int len){
+struct DICTIONARY make_new_populated_dict(struct BUCKET *buckets[], int len){
     struct DICTIONARY new_dictionary = make_new_dict();
     populate_dict(&new_dictionary, buckets, len);
     return new_dictionary;
 }
 
-void populate_dict(struct DICTIONARY *dictionaryp, struct BUCKET buckets[], int len){
-    for (int i = 0; i < len; i++) {insert_bucket(dictionaryp, &buckets[i]);}
+void populate_dict(struct DICTIONARY *dictionaryp, struct BUCKET *buckets[], int len){
+    for (int i = 0; i < len; i++) {insert_bucket(dictionaryp, buckets[i]);}
 }
 
 // Checks if more than half of the dictionaries buckets are used and in case they are, tries a resizing
@@ -68,15 +68,19 @@ int _reindex(struct DICTIONARY* dictionary, int new_capacity) {
 
 // Tries to insert a bucket without dynamically expanding the dictionary array.
 // Does not check if there's enough room in the buffer, do not use unless sure the bucket will fit
-// Returns 0 if inserted, 1 if overwritten
+// Returns 0 if inserted, 1 if overwritten, -1 if could not insert
 int _static_insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *src_bucket){
+    // Get the slot and make sure its valid
     int slot = _get_slot(dictionary, src_bucket->key);
+    if (slot<0){return -1;}
+
+    // Copy the bucket
     int slot_was_overwritten = dictionary->buckets[slot].is_used;
     memcpy(&(dictionary->buckets[slot]), src_bucket, sizeof(struct BUCKET));
 
     // Update the dictionary's attributes
     dictionary->buckets[slot].is_used = 1;
-    dictionary->buckets_used++;
+    dictionary->buckets_used += !slot_was_overwritten; /* increase only if the value was stored in an empty bucket*/
     return slot_was_overwritten;
 }
 
@@ -98,8 +102,14 @@ int insert_value(struct DICTIONARY* dictionary, char key[], void* valuep){
     return insert_bucket(dictionary, &new_bucket);
 }
 
+// Returns a void pointer if the key is invallid
 struct BUCKET* get_bucket(struct DICTIONARY* dictionary, char key[]){
+    int slot = _get_slot(dictionary, key);
+    // If is not key
+    if(slot < 0 || !dictionary->buckets[slot].is_used) {return NULL;}
+    // If its key
     return dictionary->buckets+_get_slot(dictionary, key);
+
 }
 
 void* get_value(struct DICTIONARY* dictionary, char key[]){
@@ -126,6 +136,8 @@ int _get_slot(struct DICTIONARY* dictionary, char key[]) {
 // Returns 1 if the key is present in the dictionary
 // O if its not
 int is_key(struct DICTIONARY* dictionary, char key[]){
+    int slot = _get_slot(dictionary, key);
+    if(slot < 1){return 0;}
     return dictionary->buckets[_get_slot(dictionary, key)].is_used;
 }
 
@@ -133,6 +145,7 @@ int is_key(struct DICTIONARY* dictionary, char key[]){
 // Returns 0 if the operation was correct. -1 Otherwise
 int delete_value(struct DICTIONARY* dictionary, char key[]){
     struct BUCKET* bucket = &dictionary->buckets[_get_slot(dictionary, key)];
+    if(bucket == NULL){return -1;}
     if(bucket->is_used){bucket->is_used = 0;} else {return -1;}
     _reindex(dictionary, dictionary->capacity);
     return 0;
