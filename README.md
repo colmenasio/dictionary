@@ -11,3 +11,10 @@ To top if off, as if this implementation couldnt be more janky, the dictionary d
 meaning if a value it references to gets freed, the dictionary has not way to know it contains a dangling pointer
 
 Mostly done for C practice 
+
+# FEATURES
+- [x] Basic I-O
+- [x] Dynamic size
+- [ ] Deletion of items
+- [ ] Value memory management (god this does NOT happen in rust)
+- [ ] Logical comparations between dicts (`dict1 == dict2`)
