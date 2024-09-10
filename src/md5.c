@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "md5.h"
 
+#include <string.h>
+
 #define _op(A, B, C, D, k, s, i, aux_func) _operation(&A, &B, &C, &D, k, s, i-1, aux_func, X)
 
 uint8_t get_byte(uint8_t* buffer, uint64_t total_buff_len, uint64_t byte_index);
@@ -73,6 +75,12 @@ struct hash128 md5_digest(void* buffer, uint64_t total_buff_len) {
 
     struct hash128 result = {.data = {A, B, C, D}};
     return result;
+}
+
+// Digests a string, including the `\0` character
+struct hash128 md5_digest_str(char* str) {
+    strlen(str);
+    return md5_digest()
 }
 
 uint8_t get_byte(uint8_t* buffer, uint64_t total_buff_len, uint64_t byte_index) {
