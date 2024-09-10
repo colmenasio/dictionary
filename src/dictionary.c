@@ -7,7 +7,7 @@
 #include "md5.h"
 
 int _auto_resize(struct DICTIONARY* dictionary);
-int _reindex(struct DICTIONARY* dictionary);
+int _reindex(struct DICTIONARY* dictionary, int new_capacity);
 struct BUCKET* _make_bucket_array(int size);
 int _get_slot(struct DICTIONARY* dictionary, char key[]);
 
@@ -43,16 +43,19 @@ int _auto_resize(struct DICTIONARY* dictionary) {
     if (dictionary->buckets_used <= dictionary->capacity/2) {return 0;}
 
     // Upscaling
-    struct BUCKET* old_buckets = dictionary->buckets;
-    int old_capacity = dictionary->capacity;
-    dictionary->capacity = old_capacity<<1;
-    dictionary->buckets = _make_bucket_array(old_capacity<<1); // double the capacity
+    _reindex(dictionary, dictionary->capacity<<1);
 }
 
 // Reindexes the buckets. The capacity can be increased or decreased by specifying `new_capacity`
 // Returns 0 if the reindexing was sucessful. Returns -1 if the new_capacity is too low
 int _reindex(struct DICTIONARY* dictionary, int new_capacity) {
-    if(new_capacity<=dictionary->buckets_used){}
+    if(new_capacity<dictionary->buckets_used || new_capacity<MIN_DICT_CAPACITY){return -1;}
+    // TODO IMPLEMENT REINDEXING
+    return -1;
+    struct BUCKET* old_buckets = dictionary->buckets;
+    int old_capacity = dictionary->capacity;
+    dictionary->capacity = old_capacity<<1;
+    dictionary->buckets = _make_bucket_array(old_capacity<<1); // double the capacity
 }
 
 // COpies the contents of 'src_bucket' into the appropate bucket in the dictionary
@@ -92,7 +95,7 @@ void* get_value(struct DICTIONARY* dictionary, char key[]){
 
 // Returns the slot of the bucket that corresponds to a key
 int _get_slot(struct DICTIONARY* dictionary, char key[]) {
-
+    // TODO IMPLEMENT SLOT GETTING
 }
 
 int is_key(struct DICTIONARY* dictionary, char key[]){
