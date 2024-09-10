@@ -1,26 +1,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dictionary.h"
+
 #include "md5.h"
 
 int _auto_resize(struct DICTIONARY* dictionary);
 int _reindex(struct DICTIONARY* dictionary, int new_capacity);
-struct BUCKET* _make_bucket_array(int size);
 int _get_slot(struct DICTIONARY* dictionary, char key[]);
 
 struct DICTIONARY make_new_dict(){
     struct DICTIONARY new_dictionary;
     new_dictionary.capacity = MIN_DICT_CAPACITY;
     new_dictionary.buckets_used = 0;
-    new_dictionary.buckets = _make_bucket_array(MIN_DICT_CAPACITY);
+    new_dictionary.buckets = make_bucket_array(MIN_DICT_CAPACITY);
     return new_dictionary;
-}
-
-// Generates array of unused buckets. Ownership of the memory is transfered to the caller
-struct BUCKET* _make_bucket_array(int size){
-    struct BUCKET* buckets = malloc(size * sizeof(struct BUCKET));
-    for (int i = 0; i < size; i++){buckets[i] = (struct BUCKET){.is_used = 0};}
-    return buckets;
 }
 
 struct DICTIONARY make_new_populated_dict(struct BUCKET buckets[], int len){
@@ -33,22 +26,13 @@ void populate_dict(struct DICTIONARY *dictionaryp, struct BUCKET buckets[], int 
     for (int i = 0; i < len; i++) {insert_bucket(dictionaryp, &buckets[i]);}
 }
 
-// Make an unused bucket initializing its key, hash and value
-struct BUCKET make_new_bucket(char key[], void* valuep) {
-    struct BUCKET new_bucket;
-    new_bucket.is_used = 0;
-    strncpy(new_bucket.key, key, KEY_SIGNIFICANT_CHAR);
-    memcpy(new_bucket.key_hash, md5_digest_str(key).data, sizeof(new_bucket.key_hash));
-    new_bucket.valuep = valuep;
-    return new_bucket;
-}
-
 // Checks if more than half of the dictionaries buckets are used and in case they are, tries a resizing
-// Returns 0 if no resize as necessary, returns 1 if an upscale was performed
+// Returns 0 if no resize as necessary, returns 1 if an upscale was performed. Returns -1 if the max size has been hit
 int _auto_resize(struct DICTIONARY* dictionary) {
     // If there's enough capacity
     if (dictionary->buckets_used <= dictionary->capacity/2) {return 0;}
-
+    // IF there's no room for upscaling
+    if (dictionary->capacity >= MAX_DICT_CAPACITY) {return -1;}
     // Upscaling
     _reindex(dictionary, dictionary->capacity<<1);
     return 1;
@@ -64,7 +48,7 @@ int _reindex(struct DICTIONARY* dictionary, int new_capacity) {
     struct BUCKET* old_buckets = dictionary->buckets;
     int old_capacity = dictionary->capacity;
     dictionary->capacity = new_capacity;
-    dictionary->buckets = _make_bucket_array(new_capacity);
+    dictionary->buckets = make_bucket_array(new_capacity);
     for (int i = 0; i < old_capacity; i++) {
         if (old_buckets[i].is_used) {insert_bucket(dictionary, old_buckets+i);}
     }

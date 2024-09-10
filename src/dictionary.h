@@ -5,16 +5,10 @@
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 
-#define KEY_SIGNIFICANT_CHAR 32
+#include <bucket.h>
+
 #define MIN_DICT_CAPACITY 8
 #define MAX_DICT_CAPACITY 512
-
-struct BUCKET{
-  unsigned char is_used;
-  char key[KEY_SIGNIFICANT_CHAR];
-  char key_hash[16];
-  void* valuep;
-};
 
 struct DICTIONARY{
   int capacity;
@@ -31,7 +25,5 @@ int insert_value(struct DICTIONARY* dictionary, char key[], void* valuep);
 struct BUCKET* get_bucket(struct DICTIONARY* dictionary, char key[]);
 void* get_value(struct DICTIONARY* dictionary, char key[]);
 int is_key(struct DICTIONARY* dictionary, char key[]);
-
-struct BUCKET make_new_bucket(char key[], void* valuep);
 
 #endif //DICTIONARY_H
