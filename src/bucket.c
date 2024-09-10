@@ -30,7 +30,7 @@ void print_bucket(struct BUCKET* bucket, char value_format[]){
     printf("Currently being used: %s\n", bucket->is_used ? "YES" : "NO");
     printf("Key: %s\n", key);
     printf("Hash: "); for (int i = 0; i < 16; i++){printf("%02x", bucket->key_hash[i]);} printf("\n");
-    printf("Value:");
+    printf("Value: ");
     printf(value_format, *(char*)bucket->valuep);
     printf("\n");
 }
