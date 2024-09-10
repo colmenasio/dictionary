@@ -2,8 +2,11 @@
 #include <string.h>
 #include "dictionary.h"
 
+#include <stdio.h>
+
 #include "md5.h"
 
+int _static_insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *src_bucket);
 int _auto_resize(struct DICTIONARY* dictionary);
 int _reindex(struct DICTIONARY* dictionary, int new_capacity);
 int _get_slot(struct DICTIONARY* dictionary, char key[]);
@@ -33,6 +36,7 @@ int _auto_resize(struct DICTIONARY* dictionary) {
     if (dictionary->buckets_used <= dictionary->capacity/2) {return 0;}
     // IF there's no room for upscaling
     if (dictionary->capacity >= MAX_DICT_CAPACITY) {return -1;}
+
     // Upscaling
     _reindex(dictionary, dictionary->capacity<<1);
     return 1;
@@ -47,29 +51,44 @@ int _reindex(struct DICTIONARY* dictionary, int new_capacity) {
     // Prepare the buffers for reindexing
     struct BUCKET* old_buckets = dictionary->buckets;
     int old_capacity = dictionary->capacity;
+
+    // Reset dictionary attributes
     dictionary->capacity = new_capacity;
-    dictionary->buckets = make_bucket_array(new_capacity);
+    dictionary->buckets =  make_bucket_array(new_capacity);
+    dictionary->buckets_used = 0;
+
+    // Repopulate bucket array
     for (int i = 0; i < old_capacity; i++) {
-        if (old_buckets[i].is_used) {insert_bucket(dictionary, old_buckets+i);}
+        // No need to check for dynamic resizes when re-inserting the values
+        if (old_buckets[i].is_used) {_static_insert_bucket(dictionary, old_buckets+i);}
     }
     free(old_buckets);
     return 0;
+}
+
+// Tries to insert a bucket without dynamically expanding the dictionary array.
+// Does not check if there's enough room in the buffer, do not use unless sure the bucket will fit
+// Returns 0 if inserted, 1 if overwritten
+int _static_insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *src_bucket){
+    int slot = _get_slot(dictionary, src_bucket->key);
+    int slot_was_overwritten = dictionary->buckets[slot].is_used;
+    memcpy(&(dictionary->buckets[slot]), src_bucket, sizeof(struct BUCKET));
+
+    // Update the dictionary's attributes
+    dictionary->buckets[slot].is_used = 1;
+    dictionary->buckets_used++;
+    return slot_was_overwritten;
 }
 
 // COpies the contents of 'src_bucket' into the appropate bucket in the dictionary
 // Resizes the dictionary if needed
 // Returns 0 if inserted, 1 if overwritten and -1 if anything failed
 int insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *src_bucket){
-    // Insert the bucket into its corresponding slot
-    int slot = _get_slot(dictionary, src_bucket->key);
-    int was_used = dictionary->buckets[slot].is_used;
-    memcpy(&(dictionary->buckets[slot]), src_bucket, sizeof(struct BUCKET));
-
-    // Update the dictionary's attributes
-    dictionary->buckets[slot].is_used = 1;
-    dictionary->buckets_used++;
+    // Check is the bucket array must be extended, and extend it in case need
     _auto_resize(dictionary);
-    return was_used;
+
+    // Insert the bucket
+    return _static_insert_bucket(dictionary, src_bucket);
 }
 
 //Automatically create a bucket and insert it into the dictionary
