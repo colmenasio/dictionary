@@ -24,6 +24,7 @@ struct BUCKET* make_bucket_array(int size){
 }
 
 void print_bucket(struct BUCKET* bucket, char value_format[]){
+    if (bucket == NULL){printf("EMPTY BUCKET\n"); return;}
     char key[KEY_SIGNIFICANT_CHAR+1];
     strncpy(key, bucket->key, KEY_SIGNIFICANT_CHAR); key[KEY_SIGNIFICANT_CHAR] = '\0';
     printf("PRINTING BUCKET:\n");
