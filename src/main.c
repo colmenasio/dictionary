@@ -45,6 +45,7 @@ int main() {
         print_bucket(get_bucket(&dict, "uno"), "%d");
         insert_bucket(&dict, &over1);
         print_bucket(get_bucket(&dict, "uno"), "%d");
+        destroy_dict(&dict);
     }
     return 0;
 }
