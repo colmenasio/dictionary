@@ -24,13 +24,12 @@ struct BUCKET* make_bucket_array(int size){
 }
 
 void print_bucket(struct BUCKET* bucket, char value_format[]){
-    char key[KEY_SIGNIFICANT_CHAR+1], key_hash[17];
+    char key[KEY_SIGNIFICANT_CHAR+1];
     strncpy(key, bucket->key, KEY_SIGNIFICANT_CHAR); key[KEY_SIGNIFICANT_CHAR] = '\0';
-    strncpy(key_hash, bucket->key_hash, 16); key_hash[16] = '\0';
     printf("PRINTING BUCKET:\n");
     printf("Currently being used: %s\n", bucket->is_used ? "YES" : "NO");
     printf("Key: %s\n", key);
-    printf("Hash: %s\n", key_hash);
+    printf("Hash: "); for (int i = 0; i < 16; i++){printf("%02x", bucket->key_hash[i]);} printf("\n");
     printf("Value:");
     printf(value_format, *(char*)bucket->valuep);
     printf("\n");

@@ -10,7 +10,7 @@
 struct BUCKET{
     unsigned char is_used;
     char key[KEY_SIGNIFICANT_CHAR];
-    char key_hash[16];
+    unsigned char key_hash[16];
     void* valuep;
 };
 
