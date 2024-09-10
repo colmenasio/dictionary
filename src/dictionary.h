@@ -25,5 +25,6 @@ int insert_value(struct DICTIONARY* dictionary, char key[], void* valuep);
 struct BUCKET* get_bucket(struct DICTIONARY* dictionary, char key[]);
 void* get_value(struct DICTIONARY* dictionary, char key[]);
 int is_key(struct DICTIONARY* dictionary, char key[]);
+int delete_value(struct DICTIONARY* dictionary, char key[]);
 
 #endif //DICTIONARY_H

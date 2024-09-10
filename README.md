@@ -15,6 +15,8 @@ Mostly done for C practice
 # FEATURES
 - [x] Basic I-O
 - [x] Dynamic size
-- [ ] Deletion of items
+  - [x] Memory upscaling
+  - [ ] Memory donwscaling
+- [x] Deletion of items
 - [ ] Value memory management (god this does NOT happen in rust)
 - [ ] Logical comparations between dicts (`dict1 == dict2`)

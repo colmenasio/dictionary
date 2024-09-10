@@ -123,7 +123,17 @@ int _get_slot(struct DICTIONARY* dictionary, char key[]) {
     return -1;
 }
 
+// Returns 1 if the key is present in the dictionary
+// O if its not
 int is_key(struct DICTIONARY* dictionary, char key[]){
     return dictionary->buckets[_get_slot(dictionary, key)].is_used;
 }
 
+// Removes a key-value pair from the dictionary
+// Returns 0 if the operation was correct. -1 Otherwise
+int delete_value(struct DICTIONARY* dictionary, char key[]){
+    struct BUCKET* bucket = &dictionary->buckets[_get_slot(dictionary, key)];
+    if(bucket->is_used){bucket->is_used = 0;} else {return -1;}
+    _reindex(dictionary, dictionary->capacity);
+    return 0;
+}
