@@ -27,5 +27,7 @@ struct BUCKET* get_bucket(struct DICTIONARY* dictionary, char key[]);
 void* get_value(struct DICTIONARY* dictionary, char key[]);
 int is_key(struct DICTIONARY* dictionary, char key[]);
 int delete_value(struct DICTIONARY* dictionary, char key[]);
+int dict_cmp(struct DICTIONARY *dict1, struct DICTIONARY *dict2);
+int is_bucket_in_dictionary(struct DICTIONARY* dictionary, struct BUCKET *bucket);
 
 #endif //DICTIONARY_H

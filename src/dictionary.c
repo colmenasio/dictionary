@@ -148,10 +148,27 @@ int is_key(struct DICTIONARY* dictionary, char key[]){
 
 // Removes a key-value pair from the dictionary
 // Returns 0 if the operation was correct. -1 Otherwise
-int delete_value(struct DICTIONARY* dictionary, char key[]){
-    struct BUCKET* bucket = &dictionary->buckets[_get_slot(dictionary, key)];
-    if(bucket == NULL){return -1;}
-    if(bucket->is_used){bucket->is_used = 0;} else {return -1;}
-    _reindex(dictionary, dictionary->capacity);
+int delete_value(struct DICTIONARY* dict, char key[]){
+    if(!is_key(dict, key)){return -1;}
+    get_bucket(dict, key)->is_used = 0;
+    dict->buckets_used--;
+    _reindex(dict, dict->capacity);
     return 0;
+}
+
+// Returns 1 if the dictionaries are equal. 0 otherwise
+// Note that values are compared by address rather than by value
+int dict_cmp(struct DICTIONARY *dict1, struct DICTIONARY *dict2) {
+    if (dict1->buckets_used != dict2->buckets_used) {return 0;} /* make sure both have the same n of elements*/
+    // TODO optimize by making it iterat over the smallest one of the dicts
+    for (int i = 0; i < dict1->capacity; i++) {
+        if (dict1->buckets[i].is_used && !is_bucket_in_dictionary(dict2, &dict1->buckets[i])) {return 0;}
+    }
+    return 1;
+}
+
+// Returns 1 if the dictionary contains the bucket. 0 otherwise
+int is_bucket_in_dictionary(struct DICTIONARY* dict, struct BUCKET *bucket) {
+    if (!is_key(dict, bucket->key)) {return 0;} /* if not in dict */
+    return bucket_cmp(bucket, get_bucket(dict, bucket->key));
 }
