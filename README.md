@@ -18,5 +18,10 @@ Mostly done for C practice
   - [x] Memory upscaling
   - [ ] Memory donwscaling
 - [x] Deletion of items
-- [ ] Value memory management (god this does NOT happen in rust)
+- [x] Dictionary destruction (propper memory freeing) (this does NOT happen in rust)
+- [ ] Value memory management (man i really miss rust ;-;)
 - [ ] Logical comparations between dicts (`dict1 == dict2`)
+
+
+- [x] And if you call within the next 30 minutes, you get a janky-@$$ md5 implementation 
+for free!!!1!11! `:D`
