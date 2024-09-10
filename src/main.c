@@ -31,10 +31,10 @@ int main() {
         insert_bucket(&dict, &b6);
         printf("Testing keys and getting\n");
         print_bucket(get_bucket(&dict, "dos"), "%d");
-        printf(is_key(&dict,"cuatro")? "cuatro is key\n" : "cuatro is not key\n");
-        printf(is_key(&dict,"diez")? "diez is key\n" : "diez is not key\n");
+        printf(is_key(&dict,"cuatro")? "\"cuatro\" is key\n" : "\"cuatro\" is not key\n");
+        printf(is_key(&dict,"diez")? "\"diez\" is key\n" : "\"diez\" is not key\n");
         delete_value(&dict, "cuatro"); printf("deleting \"cuatro\"\n");
-        printf(is_key(&dict,"cuatro")? "cuatro is key\n" : "cuatro is not key\n");
+        printf(is_key(&dict,"cuatro")? "\"cuatro\" is key\n" : "\"cuatro\" is not key\n");
         print_bucket(get_bucket(&dict, "cuatro"), "%d");
     }
     { // AUTO INSERTION
