@@ -39,5 +39,5 @@ void print_bucket(struct BUCKET* bucket, char value_format[]){
 // Returns 1 if the buckets are the same. 0 otherwise
 // Note that bucket comparisons do not compare values by value but by address
 int bucket_cmp(struct BUCKET* bucket1, struct BUCKET* bucket2) {
-    return !memcmp(&bucket1, &bucket2, sizeof(struct BUCKET));
+    return !memcmp(bucket1, bucket2, sizeof(struct BUCKET));
 }
