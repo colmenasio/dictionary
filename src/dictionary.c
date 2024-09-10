@@ -113,7 +113,7 @@ int _get_slot(struct DICTIONARY* dictionary, char key[]) {
     int slot, starting_slot = (hash.data[0]+hash.data[1]+hash.data[2]+hash.data[3])%dictionary->capacity;
     for(int i = 0;i < dictionary->capacity; i++) {
         slot = (starting_slot+i)%dictionary->capacity;
-        if(!dictionary->buckets[slot].is_used) {
+        if(!dictionary->buckets[slot].is_used || !strncmp(dictionary->buckets[slot].key, key, KEY_SIGNIFICANT_CHAR)) {
             return slot;
         }
     }
@@ -123,3 +123,4 @@ int _get_slot(struct DICTIONARY* dictionary, char key[]) {
 int is_key(struct DICTIONARY* dictionary, char key[]){
     return dictionary->buckets[_get_slot(dictionary, key)].is_used;
 }
+
