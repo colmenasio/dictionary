@@ -42,6 +42,11 @@ int _auto_resize(struct DICTIONARY* dictionary) {
     return 1;
 }
 
+// Free all the memory allocated to the dictionary
+void destroy_dict(struct DICTIONARY* dict) {
+    free(dict->buckets);
+}
+
 // Reindexes the buckets. The capacity can be increased or decreased by specifying `new_capacity`
 // Returns 0 if the reindexing was sucessful. Returns -1 if the new_capacity is too low
 int _reindex(struct DICTIONARY* dictionary, int new_capacity) {

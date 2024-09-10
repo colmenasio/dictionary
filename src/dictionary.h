@@ -18,6 +18,7 @@ struct DICTIONARY{
 
 struct DICTIONARY make_new_dict();
 struct DICTIONARY make_new_populated_dict(struct BUCKET *buckets[], int len);
+void destroy_dict(struct DICTIONARY* dict);
 
 void populate_dict(struct DICTIONARY *dictionaryp, struct BUCKET *buckets[], int len);
 int insert_bucket(struct DICTIONARY* dictionary, struct BUCKET *bucket);
